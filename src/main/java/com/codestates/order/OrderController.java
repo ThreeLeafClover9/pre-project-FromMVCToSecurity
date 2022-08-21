@@ -1,41 +1,39 @@
 package com.codestates.order;
 
+import com.codestates.order.dto.OrderPostDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/orders")
+@Validated
 public class OrderController {
     @PostMapping
-    public ResponseEntity postOrder(@RequestParam("memberId") long memberId,
-                                    @RequestParam("coffeeId") long coffeeId) {
-        Map<String, Long> map = new HashMap<>();
-        map.put("memberId", memberId);
-        map.put("coffeeId", coffeeId);
-        return new ResponseEntity<>(map, HttpStatus.CREATED);
+    public ResponseEntity postOrder(@RequestBody OrderPostDto orderPostDto) {
+        return new ResponseEntity<>(orderPostDto, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{order-id}")
+    public ResponseEntity patchOrder(@PathVariable("order-id") @Positive long orderId) {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{order-id}")
-    public ResponseEntity getOrder(@PathVariable("order-id") long orderId) {
-        return new ResponseEntity<>("getOrder() : " + orderId, HttpStatus.OK);
+    public ResponseEntity getOrder(@PathVariable("order-id") @Positive long orderId) {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity getOrders() {
-        return new ResponseEntity<>("getOrders()", HttpStatus.OK);
-    }
-
-    @PatchMapping("/{order-id}")
-    public ResponseEntity patchOrder() {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{order-id}")
-    public ResponseEntity deleteOrder() {
+    public ResponseEntity deleteOrder(@PathVariable("order-id") @Positive long orderId) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
