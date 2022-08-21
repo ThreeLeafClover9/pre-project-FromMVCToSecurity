@@ -1,63 +1,44 @@
 package com.codestates.coffee;
 
+import com.codestates.coffee.dto.CoffeePatchDto;
+import com.codestates.coffee.dto.CoffeePostDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.Map;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/coffees")
+@Validated
 public class CoffeeController {
-    private final Map<Long, Map<String, Object>> coffees = new HashMap<>();
-
-    @PostConstruct
-    public void init() {
-        Map<String, Object> coffee = new HashMap<>();
-        long coffeeId = 1L;
-        coffee.put("coffeeId", coffeeId);
-        coffee.put("korName", "바닐라 라떼");
-        coffee.put("engName", "Vanilla Latte");
-        coffee.put("price", 4600);
-        coffees.put(coffeeId, coffee);
+    @PostMapping
+    public ResponseEntity postCoffee(@Valid @RequestBody CoffeePostDto coffeePostDto) {
+        return new ResponseEntity<>(coffeePostDto, HttpStatus.CREATED);
     }
 
-    @PostMapping
-    public ResponseEntity postCoffee(@RequestParam("korName") String engName,
-                                     @RequestParam("engName") String korName,
-                                     @RequestParam("price") int price) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("engName", engName);
-        map.put("korName", korName);
-        map.put("price", price);
-        return new ResponseEntity<>(map, HttpStatus.CREATED);
+    @PatchMapping("/{coffee-id}")
+    public ResponseEntity patchCoffee(@PathVariable("coffee-id") @Positive long coffeeId,
+                                      @Valid @RequestBody CoffeePatchDto coffeePatchDto) {
+        coffeePatchDto.setCoffeeId(coffeeId);
+        return new ResponseEntity<>(coffeePatchDto, HttpStatus.OK);
     }
 
     @GetMapping("/{coffee-id}")
-    public ResponseEntity getCoffee(@PathVariable("coffee-id") long coffeeId) {
-        return new ResponseEntity<>("getCoffee() : " + coffeeId, HttpStatus.OK);
+    public ResponseEntity getCoffee(@PathVariable("coffee-id") @Positive long coffeeId) {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity getCoffees() {
-        return new ResponseEntity<>("getCoffees()", HttpStatus.OK);
-    }
-
-    @PatchMapping("/{coffee-id}")
-    public ResponseEntity patchCoffee(@PathVariable("coffee-id") long coffeeId,
-                                      @RequestParam("korName") String korName,
-                                      @RequestParam("price") int price) {
-        Map<String, Object> coffee = coffees.get(coffeeId);
-        coffee.put("korName", korName);
-        coffee.put("price", price);
-        return new ResponseEntity<>(coffee, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{coffee-id}")
-    public ResponseEntity deleteCoffee(@PathVariable("coffee-id") long coffeeId) {
-        coffees.remove(coffeeId);
+    public ResponseEntity deleteCoffee(@PathVariable("coffee-id") @Positive long coffeeId) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
