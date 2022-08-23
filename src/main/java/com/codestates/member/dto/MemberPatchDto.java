@@ -1,13 +1,11 @@
 package com.codestates.member.dto;
 
 import com.codestates.validator.NotSpace;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.validation.constraints.Pattern;
 
-@Getter
-@Setter
+@Data
 public class MemberPatchDto {
     private long memberId;
 

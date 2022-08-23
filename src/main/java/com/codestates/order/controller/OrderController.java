@@ -1,4 +1,4 @@
-package com.codestates.order;
+package com.codestates.order.controller;
 
 import com.codestates.order.dto.OrderPostDto;
 import org.springframework.http.HttpStatus;
