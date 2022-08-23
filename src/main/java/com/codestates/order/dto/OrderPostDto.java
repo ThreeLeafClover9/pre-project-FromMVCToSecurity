@@ -1,10 +1,10 @@
 package com.codestates.order.dto;
 
-import lombok.Getter;
+import lombok.Data;
 
 import javax.validation.constraints.Positive;
 
-@Getter
+@Data
 public class OrderPostDto {
     @Positive
     private String memberId;
