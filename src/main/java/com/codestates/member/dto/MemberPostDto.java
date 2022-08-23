@@ -1,12 +1,12 @@
 package com.codestates.member.dto;
 
-import lombok.Getter;
+import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-@Getter
+@Data
 public class MemberPostDto {
     @NotBlank
     @Email
